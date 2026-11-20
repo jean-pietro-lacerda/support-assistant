@@ -1,0 +1,23 @@
+[
+    {
+        "customer_id": "001",
+        "name": "João",
+        "technical_level": "leigo",
+        "communication_style": "didatico",
+        "channel": "chat"
+    },
+    {
+        "customer_id": "002",
+        "name": "Maria",
+        "technical_level": "avancado",
+        "communication_style": "direto",
+        "channel": "email"
+    },
+    {
+        "customer_id": "003",
+        "name": "Carlos",
+        "technical_level": "intermediario",
+        "communication_style": "detalhado",
+        "channel": "telefone"
+    }
+]
