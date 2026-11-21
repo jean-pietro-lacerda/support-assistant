@@ -1,27 +1,64 @@
 TECHNICAL_LEVELS = {
-    "leigo": "Utilize linguagem simples e explique termos técnicos quando necessário.",
+    "leigo": """
+Utilize palavras simples e familiares.
+Evite siglas, jargões e conceitos técnicos desnecessários.
+Quando um termo técnico for indispensável, explique
+imediatamente seu significado em linguagem simples.
+Não pressuponha conhecimentos técnicos do cliente.
+""",
 
-    "intermediario": "Utilize terminologia técnica moderada, explicando conceitos mais complexos.",
+    "intermediario": """
+Utilize terminologia técnica moderada.
+Explique conceitos mais complexos quando necessário.
+""",
 
-    "avancado": "Utilize terminologia técnica especializada, sem explicações básicas desnecessárias."
+    "avancado": """
+Utilize terminologia técnica especializada e precisa,
+sem explicações básicas desnecessárias.
+Conhecimento avançado não implica ser desenvolvedor ou administrador,
+nem ter acesso ao código-fonte ou permissões especiais.
+"""
 }
 
 
 COMMUNICATION_STYLES = {
-    "direto": "Apresente as informações de maneira objetiva, sem detalhes desnecessários.",
+    "direto": """
+Apresente as informações de maneira objetiva,
+sem repetições ou detalhes desnecessários.
+""",
 
-    "detalhado": "Apresente informações completas, com explicações e detalhes relevantes.",
+    "detalhado": """
+Apresente informações completas e relevantes,
+sem acrescentar conteúdo fora do objetivo solicitado.
+""",
 
-    "didatico": "Explique as informações progressivamente, utilizando exemplos quando necessário."
+    "didatico": """
+Explique as informações progressivamente,
+partindo dos conceitos mais simples.
+Utilize exemplos ou analogias quando contribuírem
+para a compreensão do cliente.
+"""
 }
 
-
 CHANNELS = {
-    "chat": "Utilize linguagem conversacional e mensagens de fácil leitura.",
+    "chat": """
+Utilize linguagem conversacional, frases curtas
+e informações de fácil leitura.
+Priorize informações essenciais e evite sobrecarregar
+o cliente com detalhes ou perguntas desnecessárias.
+""",
 
-    "email": "Organize a comunicação de maneira profissional, estruturada e compreensível.",
+    "email": """
+Organize a comunicação de maneira profissional,
+estruturada e compreensível.
+""",
 
-    "telefone": "Utilize linguagem natural e instruções que possam ser transmitidas verbalmente."
+    "telefone": """
+Utilize linguagem natural, adequada à comunicação oral.
+Apresente informações em sequência lógica.
+Evite elementos visuais que não possam ser
+facilmente transmitidos verbalmente.
+"""
 }
 
 

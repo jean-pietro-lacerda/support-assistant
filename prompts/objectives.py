@@ -8,19 +8,30 @@ Gere um diagnóstico do problema relatado pelo cliente,
 considerando seu perfil.
 
 Apresente hipóteses, evidências disponíveis,
-informações faltantes e conclusão provável.
+informações faltantes e conclusão sustentada pelas evidências.
+Quando elas forem insuficientes, declare o diagnóstico inconclusivo.
 """,
         "v2": """
 Gere um diagnóstico do problema relatado pelo cliente,
-considerando as evidências disponíveis e respeitando
-as características do seu perfil.
+considerando as evidências disponíveis e seu perfil.
 
-Organize as hipóteses de acordo com sua plausibilidade,
-identifique as evidências que sustentam cada hipótese
-e destaque as informações faltantes.
+Apresente hipóteses relevantes para o problema.
 
-Apresente uma conclusão provável, respeitando
-as limitações das informações disponíveis.
+Ordene as hipóteses por plausibilidade somente quando
+existirem evidências que sustentem essa classificação.
+
+Considere como evidências apenas fatos relatados
+no ticket, sem confundir características do cliente
+com evidências técnicas.
+
+Identifique as informações faltantes necessárias
+para confirmar ou descartar as hipóteses.
+
+Quando não houver evidências suficientes para
+determinar uma causa provável, declare explicitamente
+que o diagnóstico é inconclusivo.
+
+Não gere procedimentos de resolução.
 """
     },
 
@@ -31,9 +42,25 @@ relatado pelo cliente, considerando seu perfil.
 """,
         "v2": """
 Gere um passo a passo para a resolução do problema
-relatado pelo cliente, adaptando a linguagem, a
-complexidade técnica e o nível de detalhamento
-às características do seu perfil.
+relatado pelo cliente.
+
+Adapte a linguagem, a complexidade técnica e o
+nível de detalhamento ao seu perfil.
+
+Priorize procedimentos simples, seguros e reversíveis.
+
+Organize as etapas em uma sequência lógica,
+indicando como prosseguir dependendo dos resultados.
+
+Antes de orientar procedimentos dependentes do dispositivo ou sistema,
+solicite os dados essenciais que faltam e aguarde a resposta.
+Ofereça apenas etapas seguras que não dependam desses dados.
+
+Evite etapas redundantes e procedimentos avançados
+que ultrapassem o conhecimento técnico do cliente.
+
+Caso não seja possível resolver o problema com
+segurança, indique a necessidade de suporte especializado.
 """
     },
 
@@ -47,30 +74,58 @@ cliente, considerando seu perfil.
 Gere perguntas de esclarecimento que permitam reduzir
 as incertezas sobre o problema relatado pelo cliente.
 
-Priorize as perguntas mais relevantes para avançar
-no atendimento, evitando informações redundantes
-e adaptando a linguagem ao perfil do cliente.
+Priorize perguntas com maior capacidade de confirmar
+ou descartar possíveis causas do problema.
+
+Organize as perguntas por ordem de relevância.
+
+Solicite somente as informações necessárias para
+avançar no atendimento.
+
+Evite perguntas redundantes, já respondidas ou
+excessivamente técnicas para o perfil do cliente.
+
+Para atendimento por chat, priorize de três a cinco
+perguntas quando forem suficientes.
+
+Não solicite que o cliente execute procedimentos
+de resolução.
 """
     },
 
     "flowchart": {
         "v1": """
-Gere um resumo visual do atendimento em formato de
-fluxograma ASCII ou descrição estruturada de decisão.
-
-Escolha o formato mais adequado ao perfil do cliente.
+Gere uma árvore textual simples de decisão em português,
+falando diretamente com o cliente e considerando seu perfil.
+Identifique as etapas e indique o destino de cada resultado possível.
+Todas as etapas devem ser alcançáveis a partir do início e todos
+os caminhos devem terminar em resolução, pedido de dados ou suporte.
 """,
         "v2": """
-Gere um resumo visual do atendimento em formato de
-fluxograma ASCII ou descrição estruturada de decisão.
+Gere uma árvore textual simples de decisão em português,
+falando diretamente com o cliente, conforme seu perfil e canal.
+Use etapas identificadas, sem desenhos ASCII ou caixas.
 
-Escolha o formato mais adequado ao perfil do cliente.
+Organize as etapas, condições e caminhos de decisão
+em uma sequência lógica.
 
-Priorize as informações relevantes do atendimento,
-organizando as etapas, condições e possíveis caminhos
-de decisão em uma sequência lógica.
+Cada condição deve indicar claramente a próxima ação
+para cada resultado possível.
+
+Todas as etapas devem ser alcançáveis a partir do início.
+Não inclua etapas sem entrada, caminhos incompletos ou ciclos sem saída.
+Cada resposta deve determinar um destino; não repita perguntas já
+respondidas no ticket. Após cada teste, indique também o que fazer
+se o problema for resolvido.
+
+Utilize o mesmo idioma do atendimento em todas
+as etapas e condições.
 
 Adapte a linguagem e a complexidade ao perfil do cliente.
+
+Finalize cada caminho indicando a resolução,
+a necessidade de informações adicionais ou o
+encaminhamento para suporte especializado.
 """
     }
 }
