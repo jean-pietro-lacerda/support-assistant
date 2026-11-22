@@ -1,3 +1,4 @@
+
 import json
 
 
@@ -52,6 +53,28 @@ def obter_formato(tipo, cliente, versao):
         ensure_ascii=False
     )
 
+    regra_saudacao = "Não inclua saudações, despedidas ou assinaturas nos campos técnicos."
+
+    if versao == "v2" and tipo == "diagnosis" and cliente["channel"] == "email":
+        regra_saudacao = """
+Não inclua saudações, despedidas ou assinaturas nos campos
+hypotheses, evidence ou missing_information.
+
+O campo conclusion representa a resposta final que será
+enviada diretamente ao cliente por e-mail.
+
+Nesse campo, escreva uma mensagem completa contendo:
+- Saudação personalizada com o nome do cliente.
+- Conclusão técnica do diagnóstico em linguagem profissional.
+- Informações necessárias para continuar o atendimento,
+  quando o diagnóstico for inconclusivo.
+- Encerramento com "Atenciosamente, Equipe de Suporte".
+
+Não apresente hipóteses como causas confirmadas.
+Não invente informações ou diagnósticos.
+Não mencione os nomes dos campos JSON na mensagem.
+"""
+
     formato_base = f"""
 FORMATO DE SAÍDA
 
@@ -70,7 +93,7 @@ Respeite os tipos de dados definidos na estrutura.
 Preencha listas com elementos textuais individuais.
 Não deixe campos obrigatórios vazios. Quando não houver itens em
 uma lista, use um item textual curto explicando a ausência.
-Não inclua saudações, despedidas ou assinaturas nos campos técnicos.
+{regra_saudacao}
 A adaptação ao canal deve preservar este contrato JSON.
 
 Não mencione os nomes internos dos campos JSON
