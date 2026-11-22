@@ -5,7 +5,7 @@ from uuid import uuid4
 import hashlib
 
 
-HISTORY_PATH = Path(__file__).resolve().parent.parent / "data" / "history.json"
+HISTORY_PATH = Path(__file__).resolve().parent.parent / "data" / "history_api.json"
 VALIDATION_VERSION = 2
 
 
