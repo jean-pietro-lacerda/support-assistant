@@ -43,7 +43,20 @@
             ],
             "conclusion": "Com as informações disponíveis, o diagnóstico permanece inconclusivo. É necessário obter os detalhes listados em \"missing_information\" para identificar a causa raiz e orientar a solução adequada."
         },
-        "evaluation": null,
+        "evaluation": {
+            "clarity": {
+                "score": 3,
+                "justification": "Diagnóstico organizado, mas extenso e com termos técnicos sem explicações, dificultando a compreensão."
+            },
+            "customer_fit": {
+                "score": 4,
+                "justification": "A linguagem é geralmente compreensível, mas não está totalmente adaptada ao nível leigo."
+            },
+            "actionability": {
+                "score": 4,
+                "justification": "Identifica informações necessárias para avançar, mas algumas exigem conhecimentos que o cliente pode não possuir."
+            }
+        },
         "prompt_hash": "e4a575af03b17e74cdf3a97d7013a44d82b66012a3c8308fa3b07e8d312fbf7b",
         "messages": [
             {
@@ -97,7 +110,20 @@
             ],
             "conclusion": "Diagnóstico inconclusivo devido à falta de informações suficientes para determinar a causa provável."
         },
-        "evaluation": null,
+        "evaluation": {
+            "clarity": {
+                "score": 5,
+                "justification": "Diagnóstico mais objetivo, organizado e com linguagem mais compreensível."
+            },
+            "customer_fit": {
+                "score": 5,
+                "justification": "Utiliza linguagem acessível e exemplos compatíveis com o perfil leigo."
+            },
+            "actionability": {
+                "score": 5,
+                "justification": "Apresenta informações relevantes para continuar o diagnóstico, incluindo verificar se o aplicativo já funcionou anteriormente."
+            }
+        },
         "prompt_hash": "1a69037db944da7db49381f5827872bdf144e5538336bf1d43abe779fe5a09e1",
         "messages": [
             {
