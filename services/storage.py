@@ -1,24 +1,31 @@
+import hashlib
 import json
 from datetime import datetime, timezone
-from pathlib import Path
 from uuid import uuid4
-import hashlib
 
+from psycopg.types.json import Jsonb
 
-HISTORY_PATH = Path(__file__).resolve().parent.parent / "data" / "history_api.json"
+from services.database import conectar
+
+# Agora a validação se ta em cache é feita por um Banco de Dados PostgreSQL
+
 VALIDATION_VERSION = 2
 
-
 def identificar_prompt(mensagens):
-    configuracao = {"messages": mensagens, "validation_version": VALIDATION_VERSION}
+    configuracao = {
+        "messages": mensagens,
+        "validation_version": VALIDATION_VERSION
+    }
+
     texto = json.dumps(configuracao, ensure_ascii=False, sort_keys=True)
     return hashlib.sha256(texto.encode("utf-8")).hexdigest()
 
 
 def salvar_execucao(cliente, ticket, tipo, versao, output, modelo, temperatura, mensagens):
+    registro_id = uuid4()
 
     registro = {
-        "id": str(uuid4()),
+        "id": str(registro_id),
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "customer_id": cliente["customer_id"],
         "customer_profile": cliente,
@@ -32,40 +39,63 @@ def salvar_execucao(cliente, ticket, tipo, versao, output, modelo, temperatura, 
         "evaluation": None,
         "prompt_hash": identificar_prompt(mensagens),
         "messages": mensagens,
-        "validation_version": VALIDATION_VERSION,
+        "validation_version": VALIDATION_VERSION
     }
 
-    if HISTORY_PATH.exists():
-        with open(HISTORY_PATH, encoding="utf-8") as arquivo:
-            historico = json.load(arquivo)
-    else:
-        historico = []
-
-    historico.append(registro)
-
-    with open(HISTORY_PATH, "w", encoding="utf-8") as arquivo:
-        json.dump(historico, arquivo, indent=4, ensure_ascii=False)
+    with conectar() as conexao:
+        conexao.execute(
+            """
+            INSERT INTO executions (
+                id,
+                prompt_hash,
+                provider,
+                model,
+                temperature,
+                validation_version,
+                record
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """,
+            (
+                registro_id,
+                registro["prompt_hash"],
+                registro["provider"],
+                modelo,
+                temperatura,
+                VALIDATION_VERSION,
+                Jsonb(registro)
+            )
+        )
 
     return registro
 
+
 def buscar_cache(mensagens, modelo, temperatura):
-
-    if not HISTORY_PATH.exists():
-        return None
-
-    with open(HISTORY_PATH, encoding="utf-8") as arquivo:
-        historico = json.load(arquivo)
-
     chave = identificar_prompt(mensagens)
 
-    for registro in reversed(historico):
-        if (
-            registro.get("prompt_hash") == chave
-            and registro.get("validation_version") == VALIDATION_VERSION
-            and registro.get("model") == modelo
-            and registro.get("provider") == "groq"
-            and registro.get("settings", {}).get("temperature") == temperatura
-        ):
-            return registro["output"]
+    with conectar() as conexao:
+        resultado = conexao.execute(
+            """
+            SELECT record
+            FROM executions
+            WHERE prompt_hash = %s
+              AND validation_version = %s
+              AND model = %s
+              AND provider = %s
+              AND temperature = %s
+            ORDER BY created_at DESC
+            LIMIT 1
+            """,
+            (
+                chave,
+                VALIDATION_VERSION,
+                modelo,
+                "groq",
+                temperatura
+            )
+        ).fetchone()
 
-    return None
+    if resultado is None:
+        return None
+
+    return resultado[0]["output"]
