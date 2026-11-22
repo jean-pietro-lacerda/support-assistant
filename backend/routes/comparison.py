@@ -42,7 +42,7 @@ def compare(request: CompareRequest):
             )
 
         except ValueError as erro:
-            raise HTTPException(status_code=422, detail=str(erro))
+            raise HTTPException(status_code=502, detail=str(erro))
 
     # Retorna as respostas de ambas as versões pra comparação
     return {

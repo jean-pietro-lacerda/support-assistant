@@ -44,6 +44,6 @@ def generate(request: GenerateRequest):
                 request.prompt_version
             )
         except ValueError as erro:
-            raise HTTPException(status_code=422, detail=str(erro))
+            raise HTTPException(status_code=502, detail=str(erro))
 
     return resposta
