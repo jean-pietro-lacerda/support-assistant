@@ -1,10 +1,10 @@
 # Support Assistant — MVP CLI
 
-Assistente de suporte técnico desenvolvido em **Python**, utilizando Engenharia de Prompt e um modelo de linguagem (LLM) para gerar respostas personalizadas conforme o perfil do cliente.
+Assistente de suporte técnico desenvolvido em **Python**, utilizando Engenharia de Prompt e modelos de linguagem (LLMs) para gerar respostas adaptadas ao perfil do cliente.
 
-Esta branch (`cli-mvp`) preserva a versão funcional do projeto em **interface de linha de comando (CLI)**, incluindo a comparação entre prompts V1 e V2 e a avaliação humana dos resultados.
+Esta branch, `mvp-cli`, preserva a versão funcional do desafio técnico em linha de comando, incluindo geração de conteúdo, comparação entre prompts e avaliação humana.
 
-## Tecnologias utilizadas
+## Tecnologias
 
 - **Python** — implementação e interface CLI.
 - **Groq API** — integração com a LLM.
@@ -14,56 +14,33 @@ Esta branch (`cli-mvp`) preserva a versão funcional do projeto em **interface d
 
 ## Funcionalidades
 
-O sistema oferece cinco opções no terminal:
+O menu da aplicação permite:
 
-1. **Gerar conteúdo:** produz respostas personalizadas com V1 ou V2.
-2. **Comparar prompts:** executa V1 e V2 para o mesmo cliente, problema e tipo de conteúdo.
-3. **Consultar histórico:** permite visualizar execuções anteriores.
-4. **Avaliar resposta:** registra notas e justificativas humanas.
-5. **Sair:** encerra a aplicação.
+1. **Gerar conteúdo:** utilizar V1 ou V2 para produzir uma resposta personalizada.
+2. **Comparar prompts:** executar V1 e V2 para o mesmo cliente, problema e tipo de conteúdo.
+3. **Consultar histórico:** visualizar respostas anteriores.
+4. **Avaliar resposta:** registrar notas e justificativas humanas.
+5. **Sair:** encerrar o programa.
 
-### Tipos de conteúdo
+Os quatro tipos de conteúdo disponíveis são:
 
-| Tipo | Finalidade |
+| Tipo | Descrição |
 |---|---|
 | `diagnosis` | Hipóteses, evidências, informações faltantes e conclusão. |
-| `resolution` | Passos para solucionar o problema. |
-| `clarification` | Perguntas para obter informações adicionais. |
-| `flowchart` | Fluxo de decisão estruturado. |
+| `resolution` | Etapas de resolução do problema. |
+| `clarification` | Perguntas de esclarecimento. |
+| `flowchart` | Fluxograma estruturado de decisão. |
 
-As respostas seguem formatos JSON definidos e validados pelo sistema.
+As respostas seguem formatos JSON específicos, validados pela aplicação.
 
-## Engenharia de Prompt
+## Instalação e execução
 
-O projeto utiliza componentes separados de **persona, contexto, objetivos, instruções, restrições e formatos** para organizar a construção dos prompts.
-
-**V1 — Baseline:** versão básica e funcional, utilizada como referência inicial.
-
-**V2 — Aprimorada:** versão com instruções mais específicas para melhorar clareza, adequação ao perfil e utilidade das respostas.
-
-A comparação utiliza o mesmo cliente, ticket, modelo e configurações, permitindo observar os efeitos das alterações nos prompts.
-
-### Avaliação humana
-
-As respostas podem ser avaliadas de **1 a 5** em três critérios:
-
-- **Clarity:** clareza da comunicação.
-- **Customer fit:** adequação ao perfil do cliente.
-- **Actionability:** utilidade prática das orientações.
-
-Cada nota acompanha uma justificativa. As avaliações ficam armazenadas no histórico.
-
-## Como executar
-
-**1. Clone o repositório e acesse a branch do MVP:**
+**1. Clone o repositório e selecione a branch do MVP:**
 
 ```bash
-git clone https://github.com/SEU-USUARIO/support-assistant.git
+git clone -b mvp-cli https://github.com/jean-pietro-lacerda/support-assistant.git
 cd support-assistant
-git checkout cli-mvp
 ```
-
-Substitua a URL pelo endereço real do repositório.
 
 **2. Crie e ative o ambiente virtual (Ubuntu/Linux):**
 
@@ -78,21 +55,56 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**4. Configure a API:**
+**4. Configure as variáveis de ambiente:**
 
 ```bash
 cp .env.example .env
 ```
 
-Preencha a variável `GROQ_API_KEY` com sua chave da Groq. O arquivo `.env` não deve ser enviado ao GitHub.
+Preencha a variável `GROQ_API_KEY` no `.env` com sua chave de acesso.
 
-**5. Execute:**
+**5. Inicie a aplicação:**
 
 ```bash
 python main.py
 ```
 
-O menu interativo será apresentado no terminal.
+## Engenharia de Prompt
+
+A construção dos prompts utiliza componentes separados para persona, contexto, objetivos, instruções, restrições e formato de resposta.
+
+**V1 — Baseline:** prompt básico e funcional, utilizado como referência inicial.
+
+**V2 — Aprimorada:** prompt com orientações mais específicas para melhorar clareza, personalização e utilidade prática.
+
+A comparação mantém o mesmo cliente, ticket, modelo e configurações, permitindo analisar as diferenças entre as versões.
+
+## Avaliação humana
+
+Cada resposta pode receber notas de **1 a 5**, acompanhadas de justificativas, em três critérios:
+
+- **Clarity:** clareza da comunicação.
+- **Customer fit:** adequação ao perfil do cliente.
+- **Actionability:** utilidade prática da resposta.
+
+### Resultado da comparação registrada
+
+| Critério | V1 | V2 |
+|---|---:|---:|
+| Clareza | 3/5 | 5/5 |
+| Adequação ao cliente | 4/5 | 5/5 |
+| Acionabilidade | 4/5 | 5/5 |
+| **Total** | **11/15** | **15/15** |
+
+Os resultados representam uma avaliação humana específica, não uma medição estatística de desempenho.
+
+As justificativas, estratégias e limitações estão documentadas em [`PROMPT_ENGINEERING_NOTES.md`](PROMPT_ENGINEERING_NOTES.md).
+
+## Histórico e cache
+
+O arquivo `data/history.json` registra as execuções, incluindo cliente, ticket, versão do prompt, modelo, resposta e avaliação humana.
+
+O cache utiliza SHA-256 para identificar mensagens equivalentes, considerando também modelo, temperatura e versão da validação. Isso permite reutilizar respostas e reduzir chamadas à API.
 
 ## Estrutura do projeto
 
@@ -121,29 +133,10 @@ support-assistant/
 └── README.md
 ```
 
-## Histórico e cache
+## Desenvolvimento
 
-O arquivo `data/history.json` armazena as execuções, incluindo perfil do cliente, problema, versão do prompt, modelo, resposta e avaliação humana.
+Esta branch contém o **MVP CLI do desafio técnico**, preservado como referência para a Engenharia de Prompt e suas avaliações.
 
-O cache utiliza o hash das mensagens e considera o modelo, a temperatura e a versão da validação para reutilizar respostas equivalentes, evitando chamadas desnecessárias à API.
+A evolução do projeto para FastAPI e aplicação web acontece separadamente na branch [`main`](https://github.com/jean-pietro-lacerda/support-assistant/tree/main).
 
-## Resultados e documentação
-
-O MVP inclui execuções de diferentes tipos de conteúdo e uma comparação avaliada entre V1 e V2.
-
-Na avaliação registrada para o mesmo diagnóstico:
-
-| Critério | V1 | V2 |
-|---|---:|---:|
-| Clareza | 3/5 | 5/5 |
-| Adequação ao cliente | 4/5 | 5/5 |
-| Acionabilidade | 4/5 | 5/5 |
-| **Total** | **11/15** | **15/15** |
-
-Essas notas representam uma avaliação humana específica, não uma medição estatística de desempenho.
-
-Para consultar as estratégias utilizadas, as justificativas e as limitações observadas, veja **`PROMPT_ENGINEERING_NOTES.md`**.
-
----
-
-**Observação:** esta branch representa o MVP CLI concluído. O desenvolvimento posterior da API e da aplicação web ocorre separadamente na branch `main`.
+**Repositório:** [jean-pietro-lacerda/support-assistant](https://github.com/jean-pietro-lacerda/support-assistant)
