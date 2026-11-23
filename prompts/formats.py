@@ -45,6 +45,61 @@ com perguntas e orientações sequenciais fáceis de ler em voz alta.
 }
 
 
+EMAIL_FORMATS = {
+    "diagnosis": """
+Não inclua saudações, despedidas ou assinaturas nos campos
+hypotheses, evidence ou missing_information.
+
+Em conclusion, escreva o e-mail completo contendo:
+- Saudação personalizada com o nome do cliente.
+- Conclusão técnica fundamentada nas evidências.
+- Informações necessárias para continuar o atendimento,
+  quando o diagnóstico for inconclusivo.
+- Encerramento com "Atenciosamente, Equipe de Suporte".
+
+""",
+
+    "resolution": """
+O campo title deve conter apenas o título do problema.
+
+No primeiro item de steps, inicie com uma saudação
+personalizada usando o nome do cliente e apresente
+a primeira orientação de resolução.
+
+Mantenha os demais itens como etapas práticas,
+organizadas em sequência lógica.
+
+No campo additional_guidance, apresente as orientações
+complementares necessárias e finalize com
+"Atenciosamente, Equipe de Suporte".
+
+Não coloque a assinatura nas etapas de resolução.
+""",
+
+    "clarification": """
+No primeiro item de questions, inicie com uma saudação
+personalizada usando o nome do cliente, seguida
+da primeira pergunta de esclarecimento.
+
+No último item de questions, após a última pergunta,
+inclua uma breve despedida e finalize com
+"Atenciosamente, Equipe de Suporte".
+
+Cada item deve conter uma pergunta objetiva e necessária ao atendimento.
+Não acrescente perguntas apenas para acomodar
+a saudação ou o encerramento.
+""",
+
+    "flowchart": """
+Em flow, abra com saudação pelo nome e breve introdução;
+apresente o fluxo e finalize com "Atenciosamente, Equipe de Suporte".
+Dirija as ações e perguntas ao próprio cliente, considerando os dados
+do ticket e mantendo destinos coerentes para cada condição.
+Saudação e assinatura ficam fora das etapas de decisão.
+"""
+}
+
+
 def obter_formato(tipo, cliente, versao):
 
     schema = json.dumps(
@@ -55,25 +110,8 @@ def obter_formato(tipo, cliente, versao):
 
     regra_saudacao = "Não inclua saudações, despedidas ou assinaturas nos campos técnicos."
 
-    if versao == "v2" and tipo == "diagnosis" and cliente["channel"] == "email":
-        regra_saudacao = """
-Não inclua saudações, despedidas ou assinaturas nos campos
-hypotheses, evidence ou missing_information.
-
-O campo conclusion representa a resposta final que será
-enviada diretamente ao cliente por e-mail.
-
-Nesse campo, escreva uma mensagem completa contendo:
-- Saudação personalizada com o nome do cliente.
-- Conclusão técnica do diagnóstico em linguagem profissional.
-- Informações necessárias para continuar o atendimento,
-  quando o diagnóstico for inconclusivo.
-- Encerramento com "Atenciosamente, Equipe de Suporte".
-
-Não apresente hipóteses como causas confirmadas.
-Não invente informações ou diagnósticos.
-Não mencione os nomes dos campos JSON na mensagem.
-"""
+    if versao == "v2" and cliente["channel"] == "email":
+        regra_saudacao = EMAIL_FORMATS[tipo]
 
     formato_base = f"""
 FORMATO DE SAÍDA
@@ -118,4 +156,6 @@ Adapte a apresentação ao canal de atendimento do cliente.
 """
 
     if versao == "v2":
+        if cliente["channel"] == "email":
+            return formato_base
         return formato_base + CHANNEL_FORMATS[cliente["channel"]]

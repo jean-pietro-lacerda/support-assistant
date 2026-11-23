@@ -2,25 +2,25 @@
 
 Assistente de suporte técnico desenvolvido em **Python**, utilizando Engenharia de Prompt e modelos de linguagem (LLMs) para gerar respostas adaptadas ao perfil do cliente.
 
-Esta branch, `mvp-cli`, preserva a versão funcional do desafio técnico em linha de comando, incluindo geração de conteúdo, comparação entre prompts e avaliação humana.
+Esta branch, `mvp-cli`, preserva a versão funcional do desafio técnico em linha de comando, incluindo geração de conteúdo, comparação entre prompts, histórico, cache e avaliação humana.
 
 ## Tecnologias
 
 - **Python** — implementação e interface CLI.
 - **Groq API** — integração com a LLM.
 - **GPT-OSS 120B** (`openai/gpt-oss-120b`) — modelo utilizado.
-- **JSON** — armazenamento de clientes, execuções e avaliações.
-- **SHA-256** — identificação de requisições equivalentes para cache.
+- **JSON** — armazenamento de clientes, execuções, respostas e avaliações.
+- **SHA-256** — identificação de requisições equivalentes para reutilização de respostas em cache.
 
 ## Funcionalidades
 
 O menu da aplicação permite:
 
-1. **Gerar conteúdo:** utilizar V1 ou V2 para produzir uma resposta personalizada.
-2. **Comparar prompts:** executar V1 e V2 para o mesmo cliente, problema e tipo de conteúdo.
-3. **Consultar histórico:** visualizar respostas anteriores.
+1. **Gerar conteúdo:** utilizar V1 ou V2 para produzir uma resposta adaptada ao perfil do cliente.
+2. **Comparar prompts:** executar V1 e V2 para o mesmo cliente, ticket e tipo de conteúdo.
+3. **Consultar histórico:** visualizar respostas geradas anteriormente.
 4. **Avaliar resposta:** registrar notas e justificativas humanas.
-5. **Sair:** encerrar o programa.
+5. **Sair:** encerrar a aplicação.
 
 Os quatro tipos de conteúdo disponíveis são:
 
@@ -29,20 +29,20 @@ Os quatro tipos de conteúdo disponíveis são:
 | `diagnosis` | Hipóteses, evidências, informações faltantes e conclusão. |
 | `resolution` | Etapas de resolução do problema. |
 | `clarification` | Perguntas de esclarecimento. |
-| `flowchart` | Fluxograma estruturado de decisão. |
+| `flowchart` | Fluxograma textual estruturado de decisão. |
 
-As respostas seguem formatos JSON específicos, validados pela aplicação.
+As respostas seguem estruturas JSON específicas para cada tipo de conteúdo, com validação pela aplicação.
 
 ## Instalação e execução
 
-**1. Clone o repositório e selecione a branch do MVP:**
+**1. Clone o repositório na branch do MVP:**
 
 ```bash
 git clone -b mvp-cli https://github.com/jean-pietro-lacerda/support-assistant.git
 cd support-assistant
 ```
 
-**2. Crie e ative o ambiente virtual (Ubuntu/Linux):**
+**2. Crie e ative um ambiente virtual (Ubuntu/Linux):**
 
 ```bash
 python3 -m venv .venv
@@ -61,7 +61,7 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Preencha a variável `GROQ_API_KEY` no `.env` com sua chave de acesso.
+Preencha a variável `GROQ_API_KEY` no arquivo `.env` com sua chave de acesso à Groq.
 
 **5. Inicie a aplicação:**
 
@@ -71,23 +71,40 @@ python main.py
 
 ## Engenharia de Prompt
 
-A construção dos prompts utiliza componentes separados para persona, contexto, objetivos, instruções, restrições e formato de resposta.
+A construção dos prompts utiliza componentes separados para:
 
-**V1 — Baseline:** prompt básico e funcional, utilizado como referência inicial.
+- **Persona:** define o papel do assistente.
+- **Contexto:** apresenta o cliente e o ticket.
+- **Objetivos:** determina o conteúdo que deve ser gerado.
+- **Instruções:** adapta a comunicação ao nível técnico, estilo e canal do cliente.
+- **Restrições:** estabelece limites para o atendimento.
+- **Formatos:** define a estrutura JSON esperada.
 
-**V2 — Aprimorada:** prompt com orientações mais específicas para melhorar clareza, personalização e utilidade prática.
+### V1 — Prompt básico (baseline)
 
-A comparação mantém o mesmo cliente, ticket, modelo e configurações, permitindo analisar as diferenças entre as versões.
+Versão inicial e funcional, utilizada como referência para comparação.
+
+### V2 — Prompt aprimorado
+
+Versão com orientações mais específicas para personalizar a comunicação, considerando o perfil do cliente e os requisitos do atendimento.
+
+As duas versões permitem avaliar o impacto das instruções de Engenharia de Prompt sobre a qualidade das respostas.
+
+Na comparação registrada, foram mantidos o mesmo cliente, ticket, tipo de conteúdo, modelo e configurações de geração.
 
 ## Avaliação humana
 
-Cada resposta pode receber notas de **1 a 5**, acompanhadas de justificativas, em três critérios:
+As respostas podem receber notas de **1 a 5**, acompanhadas de justificativas, em três critérios:
 
 - **Clarity:** clareza da comunicação.
 - **Customer fit:** adequação ao perfil do cliente.
 - **Actionability:** utilidade prática da resposta.
 
-### Resultado da comparação registrada
+### Comparação registrada — Diagnóstico de João
+
+**Cliente:** João  
+**Perfil:** leigo, didático, chat  
+**Ticket:** Meu aplicativo fecha sozinho quando tento abrir.
 
 | Critério | V1 | V2 |
 |---|---:|---:|
@@ -96,15 +113,45 @@ Cada resposta pode receber notas de **1 a 5**, acompanhadas de justificativas, e
 | Acionabilidade | 4/5 | 5/5 |
 | **Total** | **11/15** | **15/15** |
 
-Os resultados representam uma avaliação humana específica, não uma medição estatística de desempenho.
+A V1 apresentou um diagnóstico estruturado e funcional. A V2 demonstrou melhorias na clareza, na adequação ao perfil leigo e na facilidade de fornecer informações para continuar o atendimento.
 
-As justificativas, estratégias e limitações estão documentadas em [`PROMPT_ENGINEERING_NOTES.md`](PROMPT_ENGINEERING_NOTES.md).
+Esses resultados representam uma **avaliação humana de um cenário específico**, não uma medição estatística de desempenho.
+
+As notas, justificativas individuais e a conclusão comparativa estão documentadas em [`PROMPT_ENGINEERING_NOTES.md`](PROMPT_ENGINEERING_NOTES.md).
 
 ## Histórico e cache
 
-O arquivo `data/history.json` registra as execuções, incluindo cliente, ticket, versão do prompt, modelo, resposta e avaliação humana.
+O arquivo `data/history.json` armazena registros das execuções, incluindo dados do cliente, ticket, versão do prompt, modelo utilizado, mensagens enviadas à LLM, resposta gerada e avaliação humana, quando disponível.
 
-O cache utiliza SHA-256 para identificar mensagens equivalentes, considerando também modelo, temperatura e versão da validação. Isso permite reutilizar respostas e reduzir chamadas à API.
+O cache utiliza SHA-256 para identificar mensagens equivalentes, considerando também parâmetros como modelo, temperatura e versão da validação.
+
+Esse mecanismo permite reutilizar resultados compatíveis, reduzindo chamadas repetidas à API.
+
+## Exemplos de execução — Samples
+
+A pasta `samples/` contém cinco exemplos reais de execução, extraídos do histórico da aplicação.
+
+Cada arquivo JSON preserva o registro completo da geração correspondente, incluindo:
+
+- Identificação e perfil do cliente.
+- Ticket, versão do prompt e tipo de conteúdo.
+- Provedor, modelo e parâmetros de geração.
+- Mensagens completas enviadas à LLM.
+- Resposta original produzida pelo modelo.
+- Identificador, data, hash e metadados de validação.
+- Avaliação humana, quando disponível.
+
+### Arquivos disponíveis
+
+| Arquivo | Conteúdo |
+|---|---|
+| `diagnosis_v1.json` | Diagnóstico de João utilizando V1, com avaliação humana. |
+| `diagnosis_v2.json` | Diagnóstico de João utilizando V2, com avaliação humana. |
+| `resolution_v2.json` | Exemplo de resolução utilizando V2. |
+| `clarification_v2.json` | Exemplo de esclarecimento utilizando V2. |
+| `flowchart_v2.json` | Fluxograma V2 de Maria sobre o acesso ao site da Alura. |
+
+Os exemplos completos permitem verificar **quais instruções foram enviadas, como a LLM respondeu e quais configurações foram utilizadas**, oferecendo rastreabilidade às gerações apresentadas no projeto.
 
 ## Estrutura do projeto
 
@@ -125,6 +172,11 @@ support-assistant/
 │   ├── prompt_engine.py
 │   └── storage.py
 ├── samples/
+│   ├── diagnosis_v1.json
+│   ├── diagnosis_v2.json
+│   ├── resolution_v2.json
+│   ├── clarification_v2.json
+│   └── flowchart_v2.json
 ├── tests/
 ├── main.py
 ├── .env.example
@@ -135,7 +187,7 @@ support-assistant/
 
 ## Desenvolvimento
 
-Esta branch contém o **MVP CLI do desafio técnico**, preservado como referência para a Engenharia de Prompt e suas avaliações.
+A branch `mvp-cli` contém o **MVP CLI do desafio técnico**, preservando a implementação em linha de comando e os registros utilizados na avaliação de Engenharia de Prompt.
 
 A evolução do projeto para FastAPI e aplicação web acontece separadamente na branch [`main`](https://github.com/jean-pietro-lacerda/support-assistant/tree/main).
 
