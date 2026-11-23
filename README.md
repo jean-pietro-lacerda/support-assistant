@@ -203,16 +203,16 @@ Os registros incluem, entre outras informações:
 A aplicação da branch `main` é dividida em três serviços principais:
 
 ```text
-Frontend React
-      |
-      v
-FastAPI Backend
-      |
-      v
-PostgreSQL
-      |
-      v
-Groq API
+                ┌──────────────┐
+                │   Groq API   │
+                └──────▲───────┘
+                       │
+Frontend React ──► FastAPI Backend
+                       │
+                       ▼
+                ┌──────────────┐
+                │ PostgreSQL   │
+                └──────────────┘
 ```
 
 ### Frontend
