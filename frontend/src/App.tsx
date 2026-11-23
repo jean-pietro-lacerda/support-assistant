@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import './App.css'
 
 type Tab = 'generate' | 'compare' | 'evaluation'
@@ -68,16 +70,6 @@ function RespostaAssistente({ resposta }: { resposta: unknown }) {
       <pre>{JSON.stringify(resposta, null, 2)}</pre>
     </details>
   </>
-}
-
-function formatarNegrito(texto: string) {
-  const partes = texto.split('**')
-
-  return partes.map((parte, index) => {
-    if (index % 2 === 0) return parte
-    if (index === partes.length - 1) return `**${parte}`
-    return <strong key={index}>{parte}</strong>
-  })
 }
 
 async function consultarApi(path: string, body?: object) {
@@ -265,11 +257,7 @@ function App() {
           {evaluation && <>
             <h3>Notas de avaliação</h3>
             <div className="evaluation-notes">
-              {evaluation.notes_markdown.split(/\r?\n\s*\r?\n/).map((bloco, index) => {
-                if (bloco.startsWith('## ')) return <h4 key={index}>{formatarNegrito(bloco.slice(3))}</h4>
-                if (bloco.startsWith('# ')) return <h3 key={index}>{formatarNegrito(bloco.slice(2))}</h3>
-                return <p key={index}>{formatarNegrito(bloco)}</p>
-              })}
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{evaluation.notes_markdown}</ReactMarkdown>
             </div>
             <h3>Histórico avaliado</h3>
             <div className="evaluation-records">
