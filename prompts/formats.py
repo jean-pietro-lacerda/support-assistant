@@ -50,19 +50,13 @@ EMAIL_FORMATS = {
 Não inclua saudações, despedidas ou assinaturas nos campos
 hypotheses, evidence ou missing_information.
 
-O campo conclusion representa a resposta final que será
-enviada diretamente ao cliente por e-mail.
-
-Nesse campo, escreva uma mensagem completa contendo:
+Em conclusion, escreva o e-mail completo contendo:
 - Saudação personalizada com o nome do cliente.
 - Conclusão técnica fundamentada nas evidências.
 - Informações necessárias para continuar o atendimento,
   quando o diagnóstico for inconclusivo.
 - Encerramento com "Atenciosamente, Equipe de Suporte".
 
-Não apresente hipóteses como causas confirmadas.
-Não invente informações ou diagnósticos.
-Não mencione os nomes dos campos JSON na mensagem.
 """,
 
     "resolution": """
@@ -80,7 +74,6 @@ complementares necessárias e finalize com
 "Atenciosamente, Equipe de Suporte".
 
 Não coloque a assinatura nas etapas de resolução.
-Não invente procedimentos ou resultados.
 """,
 
     "clarification": """
@@ -88,33 +81,21 @@ No primeiro item de questions, inicie com uma saudação
 personalizada usando o nome do cliente, seguida
 da primeira pergunta de esclarecimento.
 
-Mantenha os demais itens como perguntas objetivas
-e necessárias para avançar no atendimento.
-
 No último item de questions, após a última pergunta,
 inclua uma breve despedida e finalize com
 "Atenciosamente, Equipe de Suporte".
 
-Cada item deve conter uma pergunta relevante.
+Cada item deve conter uma pergunta objetiva e necessária ao atendimento.
 Não acrescente perguntas apenas para acomodar
 a saudação ou o encerramento.
 """,
 
     "flowchart": """
-O campo format deve conter somente decision_tree.
-
-No campo flow, inicie com uma saudação personalizada
-usando o nome do cliente e uma breve introdução.
-
-Em seguida, apresente a árvore de decisão completa,
-com etapas identificadas, condições e destinos explícitos.
-
-Após a árvore de decisão, finalize com
-"Atenciosamente, Equipe de Suporte".
-
-Não transforme a saudação ou a assinatura em etapas
-de decisão. Preserve a estrutura lógica do fluxo.
-Não invente procedimentos ou resultados.
+Em flow, abra com saudação pelo nome e breve introdução;
+apresente o fluxo e finalize com "Atenciosamente, Equipe de Suporte".
+Dirija as ações e perguntas ao próprio cliente, considerando os dados
+do ticket e mantendo destinos coerentes para cada condição.
+Saudação e assinatura ficam fora das etapas de decisão.
 """
 }
 
@@ -175,4 +156,6 @@ Adapte a apresentação ao canal de atendimento do cliente.
 """
 
     if versao == "v2":
+        if cliente["channel"] == "email":
+            return formato_base
         return formato_base + CHANNEL_FORMATS[cliente["channel"]]
