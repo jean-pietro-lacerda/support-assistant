@@ -61,7 +61,7 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Preencha a variável `GROQ_API_KEY` no arquivo `.env` com sua chave de acesso à Groq.
+Preencha a variável `CHAVE_API_LLM` no arquivo `.env` com sua chave de acesso à Groq.
 
 **5. Inicie a aplicação:**
 
